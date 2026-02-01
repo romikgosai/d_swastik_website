@@ -17,6 +17,7 @@ export interface Project {
 }
 
 const projectsDirectory = path.join(process.cwd(), 'public', 'projects');
+const basePath = process.env.NODE_ENV === 'production' ? '/d_swastik_website' : '';
 
 export function getAllProjects(): Project[] {
   if (!fs.existsSync(projectsDirectory)) {
@@ -42,8 +43,8 @@ export function getAllProjects(): Project[] {
 
       return {
         ...project,
-        images: project.images.map((img: string) => `/projects/${folder}/${img}`),
-        thumbnail: `/projects/${folder}/${project.thumbnail}`,
+        images: project.images.map((img: string) => `${basePath}/projects/${folder}/${img}`),
+        thumbnail: `${basePath}/projects/${folder}/${project.thumbnail}`,
       };
     })
     .filter((project): project is Project => project !== null);
