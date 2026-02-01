@@ -1,0 +1,28 @@
+{
+  "id": "GlobalCollege",
+  "title": "Modern Residential Complex",
+  "category": "College ",
+  "status": "completed",
+  "description": "A state-of-the-art residential complex featuring 120 luxury apartments with modern amenities and sustainable design.",
+  "location": "Old Baneshwor ,Kathamadu ",
+  "completionDate": "2026-01-19",
+  "area": "38,000 Sq Ft",
+  "client": "Global College",
+  "features": [
+    "Fully Metal Structure",
+    "Nut bolt and welding system",
+    "Five Storey Building ",
+    "Heavy Section to light section are use ISMC400 to ISMC300 and ISMB400 to ISMB200",
+    "Truss structure"
+  ],
+  "images": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+  ],
+  "thumbnail": "1.jpg"
+}
