@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Mail, Phone, MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
+
+// Form endpoint from environment variable
+// Set NEXT_PUBLIC_FORMSPREE_ENDPOINT in your .env file and GitHub Secrets
+const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || '';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -26,28 +29,38 @@ export default function ContactPage() {
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
 
+    // Check if form endpoint is configured
+    if (!FORMSPREE_ENDPOINT) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Contact form is not configured. Please set NEXT_PUBLIC_FORMSPREE_ENDPOINT.',
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
         headers: {
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
         setSubmitStatus({
           type: 'success',
-          message: data.message || 'Thank you! Your message has been sent successfully.',
+          message: 'Thank you! Your message has been sent successfully.',
         });
         // Clear form after successful submission
         setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
+        const data = await response.json();
         setSubmitStatus({
           type: 'error',
-          message: data.message || 'Something went wrong. Please try again.',
+          message: data.error || 'Something went wrong. Please try again.',
         });
       }
     } catch (error) {
@@ -62,7 +75,6 @@ export default function ContactPage() {
 
   return (
     <>
-
       <section className="py-20 bg-gradient-to-br from-slate-50 to-slate-100">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="text-center mb-12">
@@ -92,6 +104,7 @@ export default function ContactPage() {
                         </label>
                         <Input
                           id="name"
+                          name="name"
                           value={formData.name}
                           onChange={(e) =>
                             setFormData({ ...formData, name: e.target.value })
@@ -109,6 +122,7 @@ export default function ContactPage() {
                         </label>
                         <Input
                           id="email"
+                          name="email"
                           type="email"
                           value={formData.email}
                           onChange={(e) =>
@@ -128,6 +142,7 @@ export default function ContactPage() {
                       </label>
                       <Input
                         id="phone"
+                        name="phone"
                         type="tel"
                         value={formData.phone}
                         onChange={(e) =>
@@ -145,6 +160,7 @@ export default function ContactPage() {
                       </label>
                       <Textarea
                         id="message"
+                        name="message"
                         value={formData.message}
                         onChange={(e) =>
                           setFormData({ ...formData, message: e.target.value })
