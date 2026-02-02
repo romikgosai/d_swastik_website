@@ -7,9 +7,25 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 
-// Form endpoint from environment variable
-// Set NEXT_PUBLIC_FORMSPREE_ENDPOINT in your .env file and GitHub Secrets
-const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || '';
+// Discord webhook URL from environment variable
+// WARNING: This will be visible in the browser bundle!
+// Anyone can inspect the page source and see this URL
+// They could spam your Discord channel or delete the webhook
+const DISCORD_WEBHOOK_URL = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL || '';
+
+interface DiscordEmbed {
+  title: string;
+  color: number;
+  fields: Array<{
+    name: string;
+    value: string;
+    inline?: boolean;
+  }>;
+  timestamp: string;
+  footer: {
+    text: string;
+  };
+}
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -29,24 +45,69 @@ export default function ContactPage() {
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
 
-    // Check if form endpoint is configured
-    if (!FORMSPREE_ENDPOINT) {
+    // Check if webhook is configured
+    if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes('YOUR_WEBHOOK')) {
       setSubmitStatus({
         type: 'error',
-        message: 'Contact form is not configured. Please set NEXT_PUBLIC_FORMSPREE_ENDPOINT.',
+        message: 'Contact form is not configured. Please set NEXT_PUBLIC_DISCORD_WEBHOOK_URL.',
       });
       setIsSubmitting(false);
       return;
     }
 
     try {
-      const response = await fetch(FORMSPREE_ENDPOINT, {
+      const { name, email, phone, message } = formData;
+
+      // Create Discord embed for nice formatting
+      const embed: DiscordEmbed = {
+        title: '📨 New Contact Form Submission',
+        color: 0x00b894, // Nice green color
+        fields: [
+          {
+            name: '👤 Name',
+            value: name,
+            inline: true,
+          },
+          {
+            name: '📧 Email',
+            value: email,
+            inline: true,
+          },
+          {
+            name: '📱 Phone',
+            value: phone || 'Not provided',
+            inline: true,
+          },
+          {
+            name: '📝 Message',
+            value: message.slice(0, 1024), // Discord has 1024 char limit per field
+          },
+        ],
+        timestamp: new Date().toISOString(),
+        footer: {
+          text: 'D. Swastik Website Contact Form',
+        },
+      };
+
+      // Add a second embed if message is longer than 1024 characters
+      const additionalEmbeds: Array<{ color: number; description: string }> = [];
+      if (message.length > 1024) {
+        additionalEmbeds.push({
+          color: 0x00b894,
+          description: message.slice(1024, 2048), // Continue message (max 4096 total)
+        });
+      }
+
+      // Send directly to Discord webhook from browser
+      const response = await fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          content: null,
+          embeds: [embed, ...additionalEmbeds],
+        }),
       });
 
       if (response.ok) {
@@ -57,13 +118,15 @@ export default function ContactPage() {
         // Clear form after successful submission
         setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
-        const data = await response.json();
+        const errorText = await response.text();
+        console.error('Discord webhook error:', errorText);
         setSubmitStatus({
           type: 'error',
-          message: data.error || 'Something went wrong. Please try again.',
+          message: 'Failed to send message. Please try again later.',
         });
       }
     } catch (error) {
+      console.error('Contact form error:', error);
       setSubmitStatus({
         type: 'error',
         message: 'Failed to send message. Please check your connection and try again.',
