@@ -2,29 +2,10 @@
 
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Loader2 } from 'lucide-react';
-import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
-
-export const metadata: Metadata = {
-  title: 'Contact Us',
-  description: 'Contact D. Swastik Construction Pvt. Ltd. - Leading construction company in Nepal. Get in touch for residential, commercial, and infrastructure projects.',
-  keywords: [
-    'contact D Swastik Construction',
-    'construction company Nepal contact',
-    'building contractor Nepal phone',
-    'construction inquiry Nepal',
-    'real estate contact Nepal',
-    'civil construction contact',
-  ],
-  openGraph: {
-    title: 'Contact D. Swastik Construction | Top Construction Company in Nepal',
-    description: 'Contact us for your construction needs. Leading construction company in Nepal.',
-    url: '/contact',
-  },
-};
 
 // Discord webhook URL from environment variable
 // WARNING: This will be visible in the browser bundle!
@@ -123,7 +104,7 @@ export default function ContactPage() {
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Get in touch with D. Swastik Construction for your construction needs.
-              We are Nepal's trusted construction partner.
+              We are Nepals trusted construction partner.
             </p>
           </div>
 
