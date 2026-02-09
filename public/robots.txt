@@ -1,0 +1,16 @@
+# Robots.txt for D. Swastik Construction Pvt. Ltd.
+# Top Construction Company in Nepal
+
+User-agent: *
+Allow: /
+
+# Sitemap - Replace with your actual domain
+Sitemap: https://romikgosai.github.io/d_swastik_website/sitemap.xml
+
+# Crawl-delay (optional)
+Crawl-delay: 10
+
+# Disallow admin/private pages
+Disallow: /api/
+Disallow: /_next/
+Disallow: /dist/

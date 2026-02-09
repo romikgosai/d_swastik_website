@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Building2, CheckCircle2, Clock, ArrowRight } from 'lucide-react';
@@ -5,6 +6,29 @@ import { getAllProjects } from '@/lib/projects';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+
+export const metadata: Metadata = {
+  title: 'D. Swastik Construction Pvt. Ltd. | Top Construction Company in Nepal',
+  description: 'D. Swastik Construction Pvt. Ltd. is a leading construction company in Nepal specializing in residential complexes, commercial towers, and infrastructure projects. 20+ years of excellence.',
+  keywords: [
+    'D Swastik Construction',
+    'construction company Nepal',
+    'top construction company Nepal',
+    'building construction Nepal',
+    'residential construction Nepal',
+    'commercial construction Nepal',
+    'infrastructure development Nepal',
+    'real estate Nepal',
+    'civil construction Nepal',
+    'building contractors Kathmandu',
+  ],
+  openGraph: {
+    title: 'D. Swastik Construction Pvt. Ltd. | Top Construction Company in Nepal',
+    description: 'Leading construction company in Nepal specializing in residential, commercial, and infrastructure projects.',
+    url: '/',
+    type: 'website',
+  },
+};
 
 export default function Home() {
   const projects = getAllProjects();
@@ -24,8 +48,8 @@ export default function Home() {
             <span className="text-primary">Today</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Excellence in construction. From concept to completion, we deliver
-            projects that stand the test of time.
+            D. Swastik Construction - Excellence in construction across Nepal.
+            From concept to completion, we deliver projects that stand the test of time.
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/projects">
@@ -61,7 +85,7 @@ export default function Home() {
                     <CheckCircle2 className="h-6 w-6 text-green-600" />
                   </div>
                   <h3 className="text-4xl font-bold mb-2">{completedCount}</h3>
-                  <p className="text-muted-foreground">Completed</p>
+                  <p className="text-muted-foreground">Completed Projects</p>
                 </div>
               </CardContent>
             </Card>
@@ -72,7 +96,7 @@ export default function Home() {
                     <Clock className="h-6 w-6 text-orange-600" />
                   </div>
                   <h3 className="text-4xl font-bold mb-2">{ongoingCount}</h3>
-                  <p className="text-muted-foreground">Ongoing</p>
+                  <p className="text-muted-foreground">Ongoing Projects</p>
                 </div>
               </CardContent>
             </Card>
@@ -87,8 +111,8 @@ export default function Home() {
               Featured Projects
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Explore our portfolio of exceptional construction projects that
-              showcase our commitment to quality and innovation.
+              Explore our portfolio of exceptional construction projects across Nepal
+              that showcase our commitment to quality and innovation.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -99,7 +123,7 @@ export default function Home() {
                     {project.thumbnail ? (
                       <Image
                         src={project.thumbnail}
-                        alt={project.title}
+                        alt={`${project.title} - D. Swastik Construction Project in ${project.location}`}
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -153,10 +177,11 @@ export default function Home() {
                 Building Excellence Since Day One
               </h2>
               <p className="text-muted-foreground mb-6">
-                We are a leading construction company dedicated to delivering
-                high-quality projects on time and within budget. Our experienced
+                D. Swastik Construction Pvt. Ltd. is a leading construction company
+                in Nepal dedicated to delivering high-quality residential, commercial,
+                and infrastructure projects on time and within budget. Our experienced
                 team combines traditional craftsmanship with modern technology to
-                create structures that inspire.
+                create structures that inspire across Nepal.
               </p>
               <ul className="space-y-4">
                 <li className="flex items-start">
@@ -164,7 +189,7 @@ export default function Home() {
                   <div>
                     <strong>Quality Assurance</strong>
                     <p className="text-muted-foreground">
-                      Rigorous quality control at every stage of construction
+                      Rigorous quality control at every stage of construction in Nepal
                     </p>
                   </div>
                 </li>
@@ -182,14 +207,14 @@ export default function Home() {
                   <div>
                     <strong>Sustainable Practices</strong>
                     <p className="text-muted-foreground">
-                      Environmentally responsible construction methods
+                      Environmentally responsible construction methods in Nepal
                     </p>
                   </div>
                 </li>
               </ul>
               <div className="mt-8">
                 <Link href="/about">
-                  <Button>Learn More About Us</Button>
+                  <Button>Learn More About D. Swastik Construction</Button>
                 </Link>
               </div>
             </div>

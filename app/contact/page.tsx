@@ -2,10 +2,29 @@
 
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Loader2 } from 'lucide-react';
+import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
+
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Contact D. Swastik Construction Pvt. Ltd. - Leading construction company in Nepal. Get in touch for residential, commercial, and infrastructure projects.',
+  keywords: [
+    'contact D Swastik Construction',
+    'construction company Nepal contact',
+    'building contractor Nepal phone',
+    'construction inquiry Nepal',
+    'real estate contact Nepal',
+    'civil construction contact',
+  ],
+  openGraph: {
+    title: 'Contact D. Swastik Construction | Top Construction Company in Nepal',
+    description: 'Contact us for your construction needs. Leading construction company in Nepal.',
+    url: '/contact',
+  },
+};
 
 // Discord webhook URL from environment variable
 // WARNING: This will be visible in the browser bundle!
@@ -49,87 +68,47 @@ export default function ContactPage() {
     if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes('YOUR_WEBHOOK')) {
       setSubmitStatus({
         type: 'error',
-        message: 'Contact form is not configured. Please set NEXT_PUBLIC_DISCORD_WEBHOOK_URL.',
+        message: 'Contact form is not configured. Please set NEXT_PUBLIC_DISCORD_WEBHOOK_URL in your environment variables.',
       });
       setIsSubmitting(false);
       return;
     }
 
     try {
-      const { name, email, phone, message } = formData;
-
-      // Create Discord embed for nice formatting
       const embed: DiscordEmbed = {
-        title: '📨 New Contact Form Submission',
-        color: 0x00b894, // Nice green color
+        title: 'New Contact Form Submission - D. Swastik Construction',
+        color: 0x1e40af,
         fields: [
-          {
-            name: '👤 Name',
-            value: name,
-            inline: true,
-          },
-          {
-            name: '📧 Email',
-            value: email,
-            inline: true,
-          },
-          {
-            name: '📱 Phone',
-            value: phone || 'Not provided',
-            inline: true,
-          },
-          {
-            name: '📝 Message',
-            value: message.slice(0, 1024), // Discord has 1024 char limit per field
-          },
+          { name: 'Name', value: formData.name, inline: true },
+          { name: 'Email', value: formData.email, inline: true },
+          { name: 'Phone', value: formData.phone || 'Not provided', inline: true },
+          { name: 'Message', value: formData.message },
         ],
         timestamp: new Date().toISOString(),
-        footer: {
-          text: 'D. Swastik Website Contact Form',
-        },
+        footer: { text: 'D. Swastik Construction Website' },
       };
 
-      // Add a second embed if message is longer than 1024 characters
-      const additionalEmbeds: Array<{ color: number; description: string }> = [];
-      if (message.length > 1024) {
-        additionalEmbeds.push({
-          color: 0x00b894,
-          description: message.slice(1024, 2048), // Continue message (max 4096 total)
-        });
-      }
-
-      // Send directly to Discord webhook from browser
       const response = await fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: null,
-          embeds: [embed, ...additionalEmbeds],
+          embeds: [embed],
         }),
       });
 
       if (response.ok) {
         setSubmitStatus({
           type: 'success',
-          message: 'Thank you! Your message has been sent successfully.',
+          message: 'Thank you for your inquiry! We will get back to you soon.',
         });
-        // Clear form after successful submission
         setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
-        const errorText = await response.text();
-        console.error('Discord webhook error:', errorText);
-        setSubmitStatus({
-          type: 'error',
-          message: 'Failed to send message. Please try again later.',
-        });
+        throw new Error('Failed to send message');
       }
     } catch (error) {
-      console.error('Contact form error:', error);
       setSubmitStatus({
         type: 'error',
-        message: 'Failed to send message. Please check your connection and try again.',
+        message: 'Failed to send message. Please try again later or contact us directly.',
       });
     } finally {
       setIsSubmitting(false);
@@ -137,225 +116,146 @@ export default function ContactPage() {
   };
 
   return (
-    <>
-      <section className="py-20 bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <section className="py-20">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Have a project in mind? We'd love to hear from you.
+              Get in touch with D. Swastik Construction for your construction needs.
+              We are Nepal's trusted construction partner.
             </p>
           </div>
-        </div>
-      </section>
 
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2">
-              <Card>
-                <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-medium mb-2"
-                        >
-                          Name
-                        </label>
-                        <Input
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          placeholder="Your name"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="email"
-                          className="block text-sm font-medium mb-2"
-                        >
-                          Email
-                        </label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                          placeholder="your.email@example.com"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium mb-2"
-                      >
-                        Phone
-                      </label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) =>
-                          setFormData({ ...formData, phone: e.target.value })
-                        }
-                        placeholder="(555) 123-4567"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="message"
-                        className="block text-sm font-medium mb-2"
-                      >
-                        Message
-                      </label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={(e) =>
-                          setFormData({ ...formData, message: e.target.value })
-                        }
-                        placeholder="Tell us about your project..."
-                        rows={6}
-                        required
-                      />
-                    </div>
-
-                    {submitStatus.type && (
-                      <div
-                        className={`p-4 rounded-lg ${
-                          submitStatus.type === 'success'
-                            ? 'bg-green-50 text-green-800 border border-green-200'
-                            : 'bg-red-50 text-red-800 border border-red-200'
-                        }`}
-                      >
-                        {submitStatus.message}
-                      </div>
-                    )}
-
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="w-full md:w-auto"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        'Send Message'
-                      )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="space-y-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mr-4 flex-shrink-0">
-                      <Phone className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold mb-1">Phone</h3>
-                      <p className="text-muted-foreground text-sm mb-2">
-                        Give us a call
-                      </p>
-                      <a
-                        href="tel:+15551234567"
-                        className="text-primary hover:underline"
-                      >
-                        (555) 123-4567
-                      </a>
-                    </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <Phone className="h-6 w-6 text-primary" />
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mr-4 flex-shrink-0">
-                      <Mail className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold mb-1">Email</h3>
-                      <p className="text-muted-foreground text-sm mb-2">
-                        Send us an email
-                      </p>
-                      <a
-                        href="mailto:info@buildcraft.com"
-                        className="text-primary hover:underline"
-                      >
-                        info@buildcraft.com
-                      </a>
-                    </div>
+                  <h3 className="text-lg font-semibold mb-2">Phone</h3>
+                  <p className="text-muted-foreground">+977-01-4XXXXXX</p>
+                  <p className="text-muted-foreground text-sm">Mon-Fri: 9AM - 6PM</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <Mail className="h-6 w-6 text-primary" />
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mr-4 flex-shrink-0">
-                      <MapPin className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold mb-1">Office</h3>
-                      <p className="text-muted-foreground text-sm mb-2">
-                        Visit our office
-                      </p>
-                      <p className="text-sm">
-                        123 Construction Ave
-                        <br />
-                        City, State 12345
-                      </p>
-                    </div>
+                  <h3 className="text-lg font-semibold mb-2">Email</h3>
+                  <p className="text-muted-foreground">info@dswastik.com.np</p>
+                  <p className="text-muted-foreground text-sm">We reply within 24 hours</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <MapPin className="h-6 w-6 text-primary" />
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-bold mb-3">Business Hours</h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Monday - Friday</span>
-                      <span>8:00 AM - 6:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Saturday</span>
-                      <span>9:00 AM - 2:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Sunday</span>
-                      <span>Closed</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <h3 className="text-lg font-semibold mb-2">Office</h3>
+                  <p className="text-muted-foreground">Kathmandu, Nepal</p>
+                  <p className="text-muted-foreground text-sm">Bagmati Province, Nepal</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
+
+          <Card className="max-w-2xl mx-auto">
+            <CardContent className="pt-6">
+              <h2 className="text-2xl font-bold mb-6 text-center">Send Us a Message</h2>
+              {submitStatus.type && (
+                <div
+                  className={`p-4 rounded-lg mb-6 ${
+                    submitStatus.type === 'success'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {submitStatus.message}
+                </div>
+              )}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-medium">
+                      Name
+                    </label>
+                    <Input
+                      id="name"
+                      placeholder="Your Name"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium">
+                      Email
+                    </label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="phone" className="text-sm font-medium">
+                    Phone Number
+                  </label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="+977-98XXXXXXXX"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium">
+                    Message
+                  </label>
+                  <Textarea
+                    id="message"
+                    placeholder="Tell us about your project..."
+                    className="min-h-[120px]"
+                    value={formData.message}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Message'
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </section>
-
-    </>
+    </div>
   );
 }

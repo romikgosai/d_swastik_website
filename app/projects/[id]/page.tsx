@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -12,6 +13,38 @@ export async function generateStaticParams() {
   return projects.map((project) => ({
     id: project.id,
   }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const project = getProjectById(params.id);
+
+  if (!project) {
+    return {
+      title: 'Project Not Found',
+    };
+  }
+
+  return {
+    title: project.title,
+    description: project.description,
+    keywords: [
+      `${project.title}`,
+      `${project.category} Nepal`,
+      `${project.status} construction project`,
+      `construction project ${project.location}`,
+      'D Swastik Construction project',
+    ],
+    openGraph: {
+      title: `${project.title} | D. Swastik Construction`,
+      description: project.description,
+      url: `/projects/${project.id}`,
+      type: 'website',
+    },
+  };
 }
 
 export default function ProjectDetailPage({
@@ -63,7 +96,7 @@ export default function ProjectDetailPage({
               {project.thumbnail ? (
                 <Image
                   src={project.thumbnail}
-                  alt={project.title}
+                  alt={`${project.title} - D. Swastik Construction Project in ${project.location}`}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 66vw"
@@ -100,7 +133,7 @@ export default function ProjectDetailPage({
                       >
                         <img
                           src={image}
-                          alt={`${project.title} - Image ${index + 1}`}
+                          alt={`${project.title} - Image ${index + 1} | D. Swastik Construction`}
                           className="w-full h-auto block"
                           loading="lazy"
                         />
@@ -163,7 +196,7 @@ export default function ProjectDetailPage({
               <CardContent className="p-6">
                 <h3 className="font-bold text-lg mb-4">Interested in Similar Projects?</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Get in touch with us to discuss your construction needs.
+                  Contact D. Swastik Construction to discuss your construction needs in Nepal.
                 </p>
                 <Link href="/contact">
                   <Button className="w-full">Contact Us</Button>

@@ -1,7 +1,26 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Building2, Target, Users, Award, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+
+export const metadata: Metadata = {
+  title: 'About Us',
+  description: 'Learn about D. Swastik Construction Pvt. Ltd., a leading construction company in Nepal with 20+ years of experience in residential, commercial, and infrastructure projects.',
+  keywords: [
+    'about D Swastik Construction',
+    'construction company Nepal history',
+    'building contractors Nepal',
+    'construction company about us',
+    'real estate development Nepal team',
+    'civil construction company Nepal',
+  ],
+  openGraph: {
+    title: 'About D. Swastik Construction | Top Construction Company in Nepal',
+    description: 'Learn about D. Swastik Construction Pvt. Ltd., a leading construction company in Nepal with 20+ years of experience.',
+    url: '/about',
+  },
+};
 
 export default function AboutPage() {
   return (
@@ -11,11 +30,11 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 lg:px-6">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              About BuildCraft
+              About D. Swastik Construction
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Building the future with precision, passion, and unparalleled
-              expertise
+              expertise in Nepal's construction industry since 2000
             </p>
           </div>
         </div>
@@ -29,22 +48,23 @@ export default function AboutPage() {
                 Who We Are
               </h2>
               <p className="text-muted-foreground mb-4">
-                BuildCraft is a premier construction company with over two
-                decades of experience in delivering exceptional building
-                projects. Our team of skilled professionals is committed to
-                transforming visions into reality through innovative design,
-                quality craftsmanship, and sustainable practices.
+                D. Swastik Construction Pvt. Ltd. is a premier construction company
+                in Nepal with over two decades of experience in delivering exceptional
+                building projects. Our team of skilled professionals is committed to
+                transforming visions into reality through innovative design, quality
+                craftsmanship, and sustainable practices.
               </p>
               <p className="text-muted-foreground mb-4">
-                From residential complexes to commercial towers and
-                infrastructure projects, we bring expertise, dedication, and
-                attention to detail to every project we undertake. Our success
-                is built on strong relationships with clients, partners, and
-                communities.
+                From residential complexes to commercial towers and infrastructure
+                projects across Nepal, we bring expertise, dedication, and attention
+                to detail to every project we undertake. Our success is built on strong
+                relationships with clients, partners, and communities throughout Nepal.
               </p>
               <p className="text-muted-foreground">
                 We believe in building more than structures; we build lasting
-                legacies that stand the test of time.
+                legacies that stand the test of time. As one of the top construction
+                companies in Nepal, we take pride in contributing to the nation's
+                development and infrastructure growth.
               </p>
             </div>
             <div className="relative h-[500px] bg-slate-200 rounded-lg overflow-hidden">
@@ -67,9 +87,9 @@ export default function AboutPage() {
                   </div>
                   <h3 className="text-xl font-bold mb-3">Our Mission</h3>
                   <p className="text-muted-foreground">
-                    To deliver exceptional construction projects that exceed
-                    expectations while maintaining the highest standards of
-                    safety, quality, and sustainability.
+                    To deliver exceptional construction projects across Nepal that exceed
+                    expectations while maintaining the highest standards of safety, quality,
+                    and sustainability.
                   </p>
                 </div>
               </CardContent>
@@ -84,7 +104,7 @@ export default function AboutPage() {
                   <p className="text-muted-foreground">
                     A diverse team of architects, engineers, and construction
                     professionals united by a passion for excellence and
-                    innovation in every project.
+                    innovation in every project across Nepal.
                   </p>
                 </div>
               </CardContent>
@@ -99,7 +119,7 @@ export default function AboutPage() {
                   <p className="text-muted-foreground">
                     Integrity, innovation, and excellence guide everything we
                     do. We are committed to ethical practices and delivering
-                    value to all stakeholders.
+                    value to all stakeholders across Nepal.
                   </p>
                 </div>
               </CardContent>
@@ -112,7 +132,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 lg:px-6">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-              Why Choose Us
+              Why Choose D. Swastik Construction
             </h2>
             <div className="space-y-6">
               <div className="flex items-start">
@@ -122,8 +142,8 @@ export default function AboutPage() {
                     Experience & Expertise
                   </h3>
                   <p className="text-muted-foreground">
-                    Over 20 years of construction excellence with a proven track
-                    record of successful projects across multiple sectors.
+                    Over 20 years of construction excellence in Nepal with a proven track
+                    record of successful projects across residential, commercial, and infrastructure sectors.
                   </p>
                 </div>
               </div>
@@ -143,7 +163,7 @@ export default function AboutPage() {
                   <h3 className="text-xl font-bold mb-2">On-Time Delivery</h3>
                   <p className="text-muted-foreground">
                     Our efficient project management ensures timely completion
-                    without compromising quality or safety standards.
+                    without compromising quality or safety standards across Nepal.
                   </p>
                 </div>
               </div>
@@ -155,7 +175,7 @@ export default function AboutPage() {
                   </h3>
                   <p className="text-muted-foreground">
                     We integrate eco-friendly materials and methods to minimize
-                    environmental impact and create sustainable structures.
+                    environmental impact and create sustainable structures in Nepal.
                   </p>
                 </div>
               </div>
@@ -180,8 +200,8 @@ export default function AboutPage() {
             Ready to Start Your Project?
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Let's bring your vision to life. Contact us today to discuss your
-            construction needs.
+            Let's bring your vision to life. Contact D. Swastik Construction today to discuss your
+            construction needs in Nepal.
           </p>
           <Link href="/contact">
             <Button size="lg">Get in Touch</Button>
